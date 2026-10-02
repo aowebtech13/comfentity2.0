@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "https://bakdsrvnxxrai.nexxora-ai.com/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://new-con-back.lexicron.org/api",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
