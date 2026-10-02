@@ -24,7 +24,7 @@ class PasswordResetOTP extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Password Reset Code - Nexxora Finance',
+            subject: 'Password Reset Code - Comfentity Finance',
         );
     }
 
