@@ -21,9 +21,9 @@ const register = () => {
             </Link>
 
             <h4>
-             Stocks ~ Commodities ~ Crypto ~ Indicies ~
+           Perform Tasks ~
               <span className="text-slate-800 dark:text-slate-400 font-bold">
-                Trading
+             Earn
               </span>
             </h4>
           </div>
