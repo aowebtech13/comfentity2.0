@@ -22,13 +22,13 @@ const Footer = ({ className = "custom-class" }) => {
             COPYRIGHT &copy; {date.getFullYear()} comfentity, All rights Reserved
           </div>
           <div className="md:ltr:text-right md:rtl:text-end text-center text-sm">
-            Made with love by{" "}
+            Made with love {" "}
             <a
               href=""
               target="_blank"
               className="text-primary-500 font-semibold"
             >
-              Aowebtech
+              
             </a>
           </div>
         </div>

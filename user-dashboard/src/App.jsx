@@ -26,7 +26,7 @@ const lazy = (loader) => withErrorBoundary(reactLazy(loader));
 // home pages  & dashboard
 //import Dashboard from "./pages/dashboard";
 const Dashboard = lazy(() => import("./pages/dashboard"));
-const CrmPage = lazy(() => import("./pages/dashboard/crm"));
+
 const BankingPage = lazy(() => import("./pages/dashboard/banking"));
 const WithdrawPage = lazy(() => import("./pages/dashboard/withdraw"));
 
