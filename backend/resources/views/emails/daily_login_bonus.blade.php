@@ -94,7 +94,7 @@
 
         <div class="footer">
             <p>This is an automated message, please do not reply to this email.</p>
-            <p>&copy; {{ date('Y') }} Nexora Finance. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} comfentity Finance. All rights reserved.</p>
         </div>
     </div>
 </body>

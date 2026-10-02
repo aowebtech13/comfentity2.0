@@ -170,7 +170,7 @@ const [imgError, setImgError] = useState(false);
               </div>
               <div className="flex-1">
                 <div className="text-base text-slate-900 dark:text-slate-300 font-medium mb-1">{user?.Nex_id || "N/A"}</div>
-                <div className="text-sm text-slate-600 font-light dark:text-slate-300">Nexora ID</div>
+                <div className="text-sm text-slate-600 font-light dark:text-slate-300">comfentity ID</div>
               </div>
 <div className="flex-1">
                 <div className="text-base text-slate-900 dark:text-slate-300 font-medium mb-1">{user?.level_label || "Free Plan"}</div>

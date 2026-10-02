@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 const themeConfig = {
   app: {
-    name: "Nexora React",
+    name: "comfentity React",
   },
   // layout
   layout: {

@@ -20,7 +20,7 @@ const login = () => {
               <img src={isDark ? LogoWhite : Logo} alt="" className="mb-10" />
             </Link>
             <h4>
-              Perform Tasks  ~
+              Perform Tasks  ~ 
               <span className="text-slate-800 dark:text-slate-400 font-bold">
               Earn
               </span>
@@ -49,7 +49,7 @@ const login = () => {
               <div className="text-center 2xl:mb-10 mb-4">
                 <h4 className="font-medium">Sign in</h4>
                 <div className="text-slate-500 text-base">
-                  Sign in to your account to start Using Nexora
+                  Sign in to your account to start Using comfentity
                 </div>
               </div>
               <LoginForm />
@@ -65,7 +65,7 @@ const login = () => {
               </div>
             </div>
             <div className="auth-footer text-center">
-              Copyright 2026, Nexora All Rights Reserved.
+              Copyright 2026, comfentity All Rights Reserved.
             </div>
           </div>
         </div>

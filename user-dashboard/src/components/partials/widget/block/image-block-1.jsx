@@ -11,7 +11,7 @@ const ImageBlock1 = () => {
     >
       <div className="max-w-[169px]">
         <div className="text-xl font-medium text-slate-900 mb-2">
-          Upgrade your Nexora 
+          Upgrade your comfentity 
         </div>
         <p className="text-sm text-slate-800">Premium plan for better results</p>
       </div>

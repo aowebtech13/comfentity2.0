@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="nexora">
+<html lang="en" data-theme="comfentity">
 <head>
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - Nexora Admin</title>
+    <title>@yield('title') - comfentity Admin</title>
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/djme9spdc/image/upload/v1784142984/WhatsApp_Image_0008-06-09_at_11.52.12-removebg-preview_jeiykt.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +24,7 @@
                     </label>
                 </div>
                 <div class="flex-1 px-4">
-                    <span class="text-xl font-bold text-slate-900">Nexora</span>
+                    <span class="text-xl font-bold text-slate-900">comfentity</span>
                 </div>
             </div>
 
@@ -53,8 +53,8 @@
             <aside class="w-64 min-h-screen glass-sidebar flex flex-col">
                 <div class="p-6 mb-2">
                     <div class="flex items-center gap-2">
-                        <img src="https://res.cloudinary.com/djme9spdc/image/upload/v1784142984/WhatsApp_Image_0008-06-09_at_11.52.12-removebg-preview_jeiykt.png" alt="Nexora" class="h-10 w-auto">
-                        <span class="font-bold text-lg tracking-tight">Nexora</span>
+                        <img src="https://res.cloudinary.com/djme9spdc/image/upload/v1784142984/WhatsApp_Image_0008-06-09_at_11.52.12-removebg-preview_jeiykt.png" alt="comfentity" class="h-10 w-auto">
+                        <span class="font-bold text-lg tracking-tight">comfentity</span>
                     </div>
                 </div>
 

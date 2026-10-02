@@ -86,7 +86,7 @@
     <div class="container">
         <div class="lock-icon">🔐</div>
         <h1 class="title">Password Reset</h1>
-        <p class="subtitle">You requested to reset your Nexora Finance password</p>
+        <p class="subtitle">You requested to reset your comfentity Finance password</p>
 
         <p style="font-size: 15px; margin-bottom: 10px;">Your 7-digit verification code is:</p>
         
@@ -99,7 +99,7 @@
         </div>
 
         <div class="warning">
-            <strong>⚠️ Security Notice:</strong> Never share this code with anyone. Nexora team will never ask for this code via email or phone.
+            <strong>⚠️ Security Notice:</strong> Never share this code with anyone. comfentity team will never ask for this code via email or phone.
         </div>
 
         <p style="font-size: 14px; margin-top: 25px;">
@@ -108,7 +108,7 @@
 
         <div class="footer">
             <p>This is an automated message, please do not reply to this email.</p>
-            <p>&copy; {{ date('Y') }} Nexora Finance. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} comfentity Finance. All rights reserved.</p>
         </div>
     </div>
 </body>

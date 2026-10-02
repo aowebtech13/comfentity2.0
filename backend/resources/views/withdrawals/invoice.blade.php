@@ -227,7 +227,7 @@
             <div class="header">
                 <div class="brand">
                     <span class="logo-mark">N</span>
-                    <span class="brand-name">Nexora</span><br>
+                    <span class="brand-name">comfentity</span><br>
                     <span class="brand-sub">Withdrawal Receipt</span>
                 </div>
                 <div class="doc-title">
@@ -315,7 +315,7 @@
 
             <!-- Footer -->
             <div class="footer">
-                Generated on {{ \Carbon\Carbon::now()->format('M d, Y H:i') }} &middot; Thank you for using Nexora
+                Generated on {{ \Carbon\Carbon::now()->format('M d, Y H:i') }} &middot; Thank you for using comfentity
             </div>
 
         </div>

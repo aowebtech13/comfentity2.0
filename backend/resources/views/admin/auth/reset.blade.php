@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reset Password - Admin Nexora</title>
+<title>Reset Password - Admin comfentity</title>
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/djme9spdc/image/upload/v1784142984/WhatsApp_Image_0008-06-09_at_11.52.12-removebg-preview_jeiykt.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,7 @@
     <div class="max-w-md w-full bg-white rounded-[3rem] shadow-2xl shadow-slate-200/50 p-10 lg:p-12 border border-slate-200">
         <div class="text-center mb-10">
             <div class="flex items-center justify-center mx-auto mb-8">
-                <img src="https://res.cloudinary.com/djme9spdc/image/upload/v1784142984/WhatsApp_Image_0008-06-09_at_11.52.12-removebg-preview_jeiykt.png" alt="Nexora" class="h-16 w-auto">
+                <img src="https://res.cloudinary.com/djme9spdc/image/upload/v1784142984/WhatsApp_Image_0008-06-09_at_11.52.12-removebg-preview_jeiykt.png" alt="comfentity" class="h-16 w-auto">
             </div>
             <h2 class="text-3xl font-black tracking-tight text-slate-900 mb-2">Finalize Recovery</h2>
             <p class="text-slate-500 font-medium text-base">Update your credentials to regain access.</p>
@@ -38,7 +38,7 @@
             @csrf
             <div class="form-control">
                 <label class="label mb-1"><span class="label-text font-black text-[14px] text-slate-400 uppercase tracking-widest">Confirmed Email</span></label>
-                <input type="email" name="email" class="input border-slate-200 rounded-2xl bg-slate-50 font-bold focus:bg-white focus:border-slate-900 transition-all h-14" value="{{ old('email') }}" placeholder="admin@Nexora" required />
+                <input type="email" name="email" class="input border-slate-200 rounded-2xl bg-slate-50 font-bold focus:bg-white focus:border-slate-900 transition-all h-14" value="{{ old('email') }}" placeholder="admin@comfentity" required />
             </div>
             
             <div class="form-control text-center">

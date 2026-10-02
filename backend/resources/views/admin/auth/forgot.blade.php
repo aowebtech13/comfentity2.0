@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgot Password - Admin Nexora</title>
+    <title>Forgot Password - Admin comfentity</title>
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/djme9spdc/image/upload/v1784142984/WhatsApp_Image_0008-06-09_at_11.52.12-removebg-preview_jeiykt.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,7 +38,7 @@
             @csrf
             <div class="form-control">
                 <label class="label mb-1"><span class="label-text font-black text-[14px] text-slate-400 uppercase tracking-widest">Admin Email</span></label>
-                <input type="email" name="email" class="input border-slate-200 rounded-2xl bg-slate-50 font-bold focus:bg-white focus:border-slate-900 focus:ring-4 focus:ring-slate-900/5 transition-all h-14" placeholder="admin@nexora.com" required />
+                <input type="email" name="email" class="input border-slate-200 rounded-2xl bg-slate-50 font-bold focus:bg-white focus:border-slate-900 focus:ring-4 focus:ring-slate-900/5 transition-all h-14" placeholder="admin@comfentity.com" required />
             </div>
             <button type="submit" class="btn bg-slate-900 hover:bg-slate-800 border-none w-full rounded-2xl h-14 text-white font-black uppercase tracking-widest text-sm shadow-xl shadow-slate-900/20">
                 Generate Token

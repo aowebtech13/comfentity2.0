@@ -64,7 +64,7 @@ const Navmenu = ({ menus }) => {
         });
       }
     });
-    document.title = `Nexora  | ${locationName}`;
+    document.title = `comfentity  | ${locationName}`;
 
     setActiveSubmenu(submenuIndex);
     setMultiMenu(multiMenuIndex);

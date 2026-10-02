@@ -1,4 +1,4 @@
-# Setting Up Cron Jobs on cPanel — Nexora AI Trading Signals
+# Setting Up Cron Jobs on cPanel — comfentity AI Trading Signals
 
 This guide explains how to run the Laravel scheduler (and the AI signal generator)
 on your cPanel server so signals are generated and delivered to Telegram on schedule.

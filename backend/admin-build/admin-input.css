@@ -7,7 +7,7 @@
   html { font-size: 15px; }
   body { font-family: 'Inter', sans-serif; letter-spacing: -0.01em; }
 
-  /* Nexora DaisyUI theme (applied globally so no data-theme tree-shaking issues) */
+  /* comfentity DaisyUI theme (applied globally so no data-theme tree-shaking issues) */
   :root {
     --p: 15 23 42;          /* #0f172a  primary */
     --pc: 255 255 255;      /* primary-content */

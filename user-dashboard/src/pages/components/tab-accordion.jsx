@@ -23,17 +23,17 @@ const buttons = [
 ];
 const items = [
   {
-    title: "How does Nexora work?",
+    title: "How does comfentity work?",
     content:
       "Jornalists call this critical, introductory section the  and when bridge properly executed, it's the that carries your reader from anheadine try at attention-grabbing to the body of your blog post.",
   },
   {
-    title: "Where i can learn more about Using Nexora?",
+    title: "Where i can learn more about Using comfentity?",
     content:
       "Jornalists call this critical, introductory section the  and when bridge properly executed, it's the that carries your reader from anheadine try at attention-grabbing to the body of your blog post.",
   },
   {
-    title: "Why Nexora is so important?",
+    title: "Why comfentity is so important?",
     content:
       "Jornalists call this critical, introductory section the  and when bridge properly executed, it's the that carries your reader from anheadine try at attention-grabbing to the body of your blog post.",
   },

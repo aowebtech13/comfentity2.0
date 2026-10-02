@@ -41,7 +41,7 @@ const Dashboard = () => {
           </Card>
         </div>
         <div className="lg:col-span-8 col-span-12">
-          <Card title=" Nexora Signal Stream" headerSlot={<SelectMonth />} noBorder bodyClass="p-0">
+          <Card title=" comfentity Signal Stream" headerSlot={<SelectMonth />} noBorder bodyClass="p-0">
             <TradingViewWidget
               widgetType="market-overview"
               mode="market-movers"
@@ -56,7 +56,7 @@ const Dashboard = () => {
         </div>
         <div className="lg:col-span-8 col-span-12">
           <Card
-            title="Nexora Finance"
+            title="comfentity Finance"
             headerSlot={
               <div className="border border-slate-200 dark:border-slate-700 dark:bg-slate-900 rounded-sm p-1 flex items-center">
                 <span

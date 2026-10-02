@@ -202,7 +202,7 @@ const CrmPage = () => {
           </div>
 
           <div className="xl:col-span-6 col-span-12">
-            <Card title=" Nexora Top Traders" headerSlot={<SelectMonth />}>
+            <Card title=" comfentity Top Traders" headerSlot={<SelectMonth />}>
               <Customer />
             </Card>
           </div>

@@ -20,7 +20,7 @@
                     <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center">
                         <i class="fas fa-landmark text-slate-900 text-xl"></i>
                     </div>
-                    <span class="text-2xl font-black tracking-tighter">Nexora</span>
+                    <span class="text-2xl font-black tracking-tighter">comfentity</span>
                 </div>
                 <h1 class="text-5xl font-black mb-8 leading-[1.1]">The engine of <br/><span class="text-slate-400">financial precision.</span></h1>
                 <p class="text-lg text-slate-400 leading-relaxed max-w-sm">Access the administrative core to manage global assets, monitor transactions, and oversee investor portfolios.</p>

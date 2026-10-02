@@ -74,7 +74,7 @@ const CardSlider = ({ cards }) => {
                 {item.cardNo}
               </div>
               <div className="text-xs text-opacity-75 mb-[2px]">
-                Nexora balance
+                comfentity balance
               </div>
               <div className="text-2xl font-semibold">{item.balance}</div>
             </div>

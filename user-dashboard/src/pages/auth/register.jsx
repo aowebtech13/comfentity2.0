@@ -50,7 +50,7 @@ const register = () => {
               <div className="text-center 2xl:mb-10 mb-5">
                 <h4 className="font-medium">Sign up</h4>
                 <div className="text-slate-500 dark:text-slate-400 text-base">
-                  Create an account to start Using Nexora
+                  Create an account to start Using comfentity
                 </div>
               </div>
               <RegForm />
@@ -66,7 +66,7 @@ const register = () => {
               </div>
             </div>
             <div className="auth-footer text-center">
-              Copyright 2026, Nexora All Rights Reserved.
+              Copyright 2026, comfentity All Rights Reserved.
             </div>
           </div>
         </div>

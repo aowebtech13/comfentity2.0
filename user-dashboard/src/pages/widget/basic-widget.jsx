@@ -63,7 +63,7 @@ const BasicWidget = () => {
         >
           <div className="max-w-[180px]">
             <h4 className="text-xl font-medium text-white mb-2">
-              Upgrade your Nexora 
+              Upgrade your comfentity 
             </h4>
             <p className="text-sm text-white text-opacity-80">
               Premium plan for better results
@@ -82,7 +82,7 @@ const BasicWidget = () => {
         >
           <div className="max-w-[180px]">
             <div className="text-xl font-medium text-slate-900 mb-2">
-              Upgrade your Nexora 
+              Upgrade your comfentity 
             </div>
             <p className="text-sm text-slate-800">
               Premium plan for better results
@@ -101,7 +101,7 @@ const BasicWidget = () => {
         >
           <div className="max-w-[180px]">
             <div className="text-xl font-medium text-slate-900 mb-2">
-              Upgrade your Nexora 
+              Upgrade your comfentity 
             </div>
             <p className="text-sm text-slate-800">
               Premium plan for better results
@@ -124,7 +124,7 @@ const BasicWidget = () => {
               <span className="block">Mr. Dianne Russell</span>
             </h4>
             <p className="text-sm text-white font-normal">
-              Welcome to  Nexora 
+              Welcome to  comfentity 
             </p>
           </div>
         </div>
@@ -142,7 +142,7 @@ const BasicWidget = () => {
                 <span className="block">Mr. Dianne Russell</span>
               </div>
               <p className="text-sm text-slate-900 font-normal">
-                Welcome to  Nexora 
+                Welcome to  comfentity 
               </p>
             </div>
           </div>
@@ -164,7 +164,7 @@ const BasicWidget = () => {
                 <span className="block">Mr. Dianne Russell</span>
               </div>
               <p className="text-sm text-wgite text-white dark:text-slate-800 font-normal">
-                Welcome to  Nexora 
+                Welcome to  comfentity 
               </p>
             </div>
           </div>
@@ -255,7 +255,7 @@ const BasicWidget = () => {
             <div className="max-w-[168px]">
               <div className="widget-title">Unlimited Access</div>
               <div className="text-xs font-normal">
-                Upgrade your Nexora Account
+                Upgrade your comfentity Account
               </div>
             </div>
             <div className="mt-6 mb-14">
@@ -286,7 +286,7 @@ const BasicWidget = () => {
             <div className="max-w-[160px] mx-auto mt-6">
               <div className="widget-title">Unlimited Access</div>
               <div className="text-xs font-normal">
-                Upgrade your Nexora Account
+                Upgrade your comfentity Account
               </div>
             </div>
             <div className="mt-6">
@@ -311,7 +311,7 @@ const BasicWidget = () => {
             <div className="max-w-[160px] mx-auto mt-6">
               <div className="widget-title">Unlimited Access</div>
               <div className="text-xs font-normal">
-                Upgrade your Nexora Account
+                Upgrade your comfentity Account
               </div>
             </div>
             <div className="mt-6">

@@ -50,7 +50,7 @@ const MobileMenu = ({ className = "custom-class" }) => {
             </div>
             <div>
               <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
-                Nexora
+                comfentity
               </h1>
             </div>
           </div>
@@ -83,7 +83,7 @@ const MobileMenu = ({ className = "custom-class" }) => {
           <div className="max-w-[160px] mx-auto mt-6">
             <div className="widget-title">Unlimited Access</div>
             <div className="text-xs font-light">
-              Upgrade your Nexora Account
+              Upgrade your comfentity Account
             </div>
           </div>
           <div className="mt-6">

@@ -19,7 +19,7 @@ const Footer = ({ className = "custom-class" }) => {
       <div className="site-footer px-6 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-300 py-4">
         <div className="grid md:grid-cols-2 grid-cols-1 md:gap-5">
           <div className="text-center md:ltr:text-start md:rtl:text-right text-sm">
-            COPYRIGHT &copy; {date.getFullYear()} Nexora, All rights Reserved
+            COPYRIGHT &copy; {date.getFullYear()} comfentity, All rights Reserved
           </div>
           <div className="md:ltr:text-right md:rtl:text-end text-center text-sm">
             Made with love by{" "}

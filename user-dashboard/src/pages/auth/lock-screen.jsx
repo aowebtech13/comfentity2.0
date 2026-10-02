@@ -73,7 +73,7 @@ const LockScreen = () => {
               </div>
             </div>
             <div className="auth-footer text-center">
-              Copyright 2026, Nexora All Rights Reserved.
+              Copyright 2026, comfentity All Rights Reserved.
             </div>
           </div>
         </div>

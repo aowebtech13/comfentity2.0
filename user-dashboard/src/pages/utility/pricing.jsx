@@ -51,7 +51,7 @@ const PricingPage = () => {
       <div className="space-y-5">
         <Card>
           <div className="flex justify-between mb-6">
-            <h4 className="text-slate-900 dark:text-slate-300 text-xl font-medium">Nexora Packages</h4>
+            <h4 className="text-slate-900 dark:text-slate-300 text-xl font-medium">comfentity Packages</h4>
           
           </div>
           <div className="grid xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
