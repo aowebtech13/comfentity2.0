@@ -20,9 +20,9 @@ const login = () => {
               <img src={isDark ? LogoWhite : Logo} alt="" className="mb-10" />
             </Link>
             <h4>
-              Upgrade your Trading
+              Perform Tasks  ~
               <span className="text-slate-800 dark:text-slate-400 font-bold">
-                Skills
+              Earn
               </span>
             </h4>
           </div>

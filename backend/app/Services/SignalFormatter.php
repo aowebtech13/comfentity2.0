@@ -52,7 +52,7 @@ class SignalFormatter
         $actionText = $isBullish ? 'Buy' : 'Sell';
 
         $lines = [];
-        $lines[] = $arrow . ' <b>NEXXORA AI SIGNAL</b> ' . $arrow;
+        $lines[] = $arrow . ' <b>Comfentity SIGNAL</b> ' . $arrow;
         $lines[] = '━━━━━━━━━━━━━━━━━━━━';
         $lines[] = '';
         $lines[] = '🏷 Asset: <b>' . e($signal->symbol) . '</b>'
