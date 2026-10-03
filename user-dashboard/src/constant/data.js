@@ -14,23 +14,14 @@ export const menuItems = [
         childtitle: "Earnings Dashboard",
         childlink: "banking",
       },
-      {
-        childtitle: " Signals Dashbaord",
-        childlink: "crm",
-      },
+      
       {
         childtitle: "Command Center",
         childlink: "dashboard",
       },
     ],
   },
-  {
-    title: "updates",
-    icon: "heroicons:arrow-trending-up",
-    link: "changelog",
-    isHide: false,
-    badge: "1.0.0",
-  },
+ 
   {
     isHeadr: true,
     title: "apps",
@@ -96,11 +87,7 @@ export const topMenu = [
         childlink: "project",
         childicon: "heroicons:briefcase",
       },
-      {
-        childtitle: "CRM Dashboard",
-        childlink: "crm",
-        childicon: "ri:customer-service-2-fill",
-      },
+     
       {
         childtitle: "Banking Dashboard",
         childlink: "banking",

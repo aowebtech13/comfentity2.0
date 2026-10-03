@@ -15,6 +15,11 @@ class Transaction extends Model
         'reference',
         'description',
         'receipt_path',
+        // Crypto-only deposits: on-chain proof submitted for manual review.
+        'crypto_network',
+        'crypto_address',
+        'crypto_tx_hash',
+        'review_note',
     ];
 
     protected $appends = ['receipt_url'];
