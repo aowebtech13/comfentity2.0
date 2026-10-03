@@ -278,8 +278,9 @@ const DepositPage = () => {
                   2
                 </span>
                 <span>
-                  Copy the transaction hash (TxID) from your wallet or a block
-                  explorer once the transfer is broadcast.
+                  {requiresTxHash
+                    ? "Copy the transaction hash (TxID) from your wallet or a block explorer once the transfer is broadcast."
+                    : "Take a screenshot of the completed payment in your wallet or exchange — that screenshot is what we verify against."}
                 </span>
               </li>
               <li className="flex gap-3">
@@ -287,9 +288,10 @@ const DepositPage = () => {
                   3
                 </span>
                 <span>
-                  Submit the amount, transaction hash and a screenshot of the
-                  payment. An administrator verifies it and your balance is
-                  credited.
+                  Submit the amount
+                  {requiresTxHash ? ", transaction hash" : ""}
+                  {requiresReceipt ? " and the payment screenshot" : ""}. An
+                  administrator verifies it and your balance is credited.
                 </span>
               </li>
             </ol>
@@ -409,22 +411,30 @@ const DepositPage = () => {
               />
 
               <Textinput
-                label="Transaction Hash (TxID)"
+                label={`Transaction Hash (TxID)${requiresTxHash ? "" : " — optional"}`}
                 value={txHash}
                 onChange={(e) => setTxHash(e.target.value)}
                 placeholder="Paste the transaction hash of your payment"
                 className="h-[48px]"
                 error={fieldErrors.crypto_tx_hash}
-                description="You can find this on the transaction detail page of your wallet or a block explorer."
+                description={
+                  requiresTxHash
+                    ? "You can find this on the transaction detail page of your wallet or a block explorer."
+                    : `Not required for ${activeWallet?.label ?? "this network"} — we verify your deposit from the payment screenshot. Add the hash only if you have it, it speeds up review.`
+                }
               />
 
               <div>
                 <label className="block capitalize form-label mb-2">
-                  Payment Screenshot <span className="text-slate-400">(optional)</span>
+                  Payment Screenshot{" "}
+                  <span className="text-slate-400">
+                    {requiresReceipt ? "(required)" : "(optional)"}
+                  </span>
                 </label>
                 <input
                   type="file"
                   accept="image/png,image/jpeg,image/gif"
+                  required={requiresReceipt}
                   onChange={handleReceiptChange}
                   className="form-control py-2 h-[48px] w-full"
                 />
