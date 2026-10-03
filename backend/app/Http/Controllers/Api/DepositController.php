@@ -46,11 +46,6 @@ class DepositController extends Controller
                     'address' => $wallet['address'],
                     'qr_url' => ($wallet['qr_url'] ?? '') . rawurlencode($wallet['address']),
                     'confirmations_required' => $wallet['confirmations_required'] ?? 1,
-                    // The frontend uses these to show/hide and label the proof
-                    // fields, so the page never asks for proof the wallet does
-                    // not actually need.
-                    'requires_tx_hash' => (bool) ($wallet['requires_tx_hash'] ?? true),
-                    'requires_receipt' => (bool) ($wallet['requires_receipt'] ?? false),
                     'explorer_tx_url' => $wallet['explorer_tx_url'] ?? null,
                     'instructions' => $wallet['instructions'] ?? '',
                 ];
@@ -60,6 +55,11 @@ class DepositController extends Controller
 
         return response()->json([
             'wallets' => $wallets,
+            // Proof requirements are the same on every network, so they are
+            // published once here rather than repeated per wallet. The frontend
+            // uses them to label the proof fields.
+            'requires_tx_hash' => (bool) config('deposit.requires_tx_hash', false),
+            'requires_receipt' => (bool) config('deposit.requires_receipt', true),
             'min_amount' => (float) config('deposit.min_amount', 0),
             'max_amount' => (float) config('deposit.max_amount', 0),
             'currency' => 'USD',
@@ -162,9 +162,10 @@ class DepositController extends Controller
      * and approves the deposit from the admin panel, which is when the balance
      * is credited. See AdminController::updateDepositStatus().
      *
-     * What counts as proof differs per network, and config/deposit.php decides
-     * it: BTC is proven by the on-chain transaction hash, while ETH is proven
-     * by the uploaded payment receipt, so the hash is optional there.
+     * The uploaded payment receipt is the proof and is always required. The
+     * on-chain transaction hash is never required — it is stored only when the
+     * user has it to hand, so the reviewer can check it faster. Both rules come
+     * from config/deposit.php and apply to every network.
      */
     public function store(Request $request)
     {
@@ -184,8 +185,8 @@ class DepositController extends Controller
             ], 422);
         }
 
-        $requiresTxHash = (bool) ($wallet['requires_tx_hash'] ?? true);
-        $requiresReceipt = (bool) ($wallet['requires_receipt'] ?? false);
+        $requiresTxHash = (bool) config('deposit.requires_tx_hash', false);
+        $requiresReceipt = (bool) config('deposit.requires_receipt', true);
 
         $validated = $request->validate([
             'amount' => ['required', 'numeric', 'min:' . $min, $max > 0 ? 'max:' . $max : 'nullable'],

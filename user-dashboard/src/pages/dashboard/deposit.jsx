@@ -13,17 +13,16 @@ import depositService from "@/services/depositService";
  *
  * Flow:
  *   1. Load the published wallet(s) + limits from GET /deposit-info.
- *   2. The user picks a network, copies its address and sends funds on-chain.
- *   3. They submit the proof that network requires: BTC is proven by the
- *      transaction hash, ETH by a screenshot of the payment.
- *   4. An administrator verifies it and approves, which credits the balance.
+ *   2. The user copies the wallet address (or scans its QR code).
+ *   3. They pay from their own wallet or exchange — nothing is paid here.
+ *   4. They come back and upload a screenshot of the completed payment.
+ *   5. An administrator verifies it and approves, which credits the balance.
+ *
+ * The uploaded screenshot is the proof of payment. A transaction hash is never
+ * required; it is accepted only to let the reviewer cross-check faster.
  *
  * Nothing is auto-verified: the deposit stays "pending" until a human checks
- * the on-chain transaction, so the copy makes that expectation explicit.
- *
- * Which proof a network needs is never hardcoded here — it follows the
- * requires_tx_hash / requires_receipt flags the backend publishes per wallet,
- * so adding a network is a config change only.
+ * the payment, so the copy makes that expectation explicit.
  */
 const DepositPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -52,10 +51,10 @@ const DepositPage = () => {
   const activeWallet =
     wallets.find((w) => w.id === selectedNetwork) ?? wallets[0] ?? null;
 
-  // What proof the selected network needs. Defaults mirror the backend so the
-  // form stays safe if an older payload ever arrives without these flags.
-  const requiresTxHash = activeWallet?.requires_tx_hash ?? true;
-  const requiresReceipt = activeWallet?.requires_receipt ?? false;
+  // Proof requirements are published once for every wallet (config/deposit.php).
+  // Defaults mirror the server: the receipt is the proof, the hash is optional.
+  const requiresTxHash = info?.requires_tx_hash ?? false;
+  const requiresReceipt = info?.requires_receipt ?? true;
 
   const loadDepositInfo = useCallback(async () => {
     try {
@@ -268,9 +267,9 @@ const DepositPage = () => {
                   1
                 </span>
                 <span>
-                  Copy the wallet address below and send your crypto to it.
-                  Only send the exact network shown — funds sent on another
-                  network cannot be recovered.
+                  Copy the wallet address below, or scan its QR code. Only send
+                  the exact network shown — funds sent on another network cannot
+                  be recovered.
                 </span>
               </li>
               <li className="flex gap-3">
@@ -278,9 +277,8 @@ const DepositPage = () => {
                   2
                 </span>
                 <span>
-                  {requiresTxHash
-                    ? "Copy the transaction hash (TxID) from your wallet or a block explorer once the transfer is broadcast."
-                    : "Take a screenshot of the completed payment in your wallet or exchange — that screenshot is what we verify against."}
+                  Pay from your own wallet or exchange. This happens outside our
+                  website, so keep the confirmation or receipt it gives you.
                 </span>
               </li>
               <li className="flex gap-3">
@@ -288,17 +286,16 @@ const DepositPage = () => {
                   3
                 </span>
                 <span>
-                  Submit the amount
-                  {requiresTxHash ? ", transaction hash" : ""}
-                  {requiresReceipt ? " and the payment screenshot" : ""}. An
-                  administrator verifies it and your balance is credited.
+                  Come back here and upload that screenshot with the amount you
+                  sent. An administrator verifies it and your balance is
+                  credited.
                 </span>
               </li>
             </ol>
             <div className="mt-5 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-sm">
               <Icon icon="heroicons:information-circle" className="inline-block mr-2" />
               Deposits are not automatic. Your balance is only updated after a
-              human reviewer confirms the transaction on-chain, so please allow
+              human reviewer checks your payment screenshot, so please allow
               some time for verification.
             </div>
           </Card>
@@ -417,11 +414,7 @@ const DepositPage = () => {
                 placeholder="Paste the transaction hash of your payment"
                 className="h-[48px]"
                 error={fieldErrors.crypto_tx_hash}
-                description={
-                  requiresTxHash
-                    ? "You can find this on the transaction detail page of your wallet or a block explorer."
-                    : `Not required for ${activeWallet?.label ?? "this network"} — we verify your deposit from the payment screenshot. Add the hash only if you have it, it speeds up review.`
-                }
+                description="Optional — we verify your deposit from the payment screenshot. Add the hash only if you have it handy; it lets our reviewer cross-check the payment faster."
               />
 
               <div>

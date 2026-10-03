@@ -8,26 +8,42 @@ return [
     |--------------------------------------------------------------------------
     |
     | Deposits are crypto-only and are settled manually by an administrator.
-    | The user sends funds to one of the wallets below, then submits proof of
-    | payment (amount, transaction hash and an optional screenshot) which is
-    | reviewed in the admin panel.
     |
-    | Addresses are overridable through .env so the wallet can be rotated
-    | without a code change.
+    | The flow is deliberately simple and identical for every network:
+    |   1. The user copies one of the wallet addresses below (or its QR code).
+    |   2. They make the payment from their own wallet or exchange — nothing is
+    |      paid through this website.
+    |   3. They come back to the dashboard and upload a screenshot of the
+    |      completed payment, which a finance reviewer checks before approving.
     |
-    | Each wallet also declares what proof the user has to provide, because the
-    | networks differ:
-    |   requires_tx_hash  - true  => the on-chain transaction hash is mandatory
-    |                      - false => the hash is optional (receipt is the proof)
-    |   requires_receipt  - true  => a payment screenshot is mandatory
-    |   explorer_tx_url   - base URL an admin uses to open the hash in a block
-    |                      explorer; the hash is appended to it.
+    | Addresses are overridable through .env so a wallet can be rotated without
+    | a code change.
     |
     */
 
     'min_amount' => (float) env('DEPOSIT_MIN_AMOUNT', 10),
 
     'max_amount' => (float) env('DEPOSIT_MAX_AMOUNT', 100000),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Proof of Payment
+    |--------------------------------------------------------------------------
+    |
+    | The uploaded screenshot is the proof of payment and is always required.
+    |
+    | The on-chain transaction hash is never required — asking for it only adds
+    | friction, so it is accepted when the user happens to have it, which just
+    | lets the reviewer cross-check the payment faster. It is stored per
+    | deposit so the admin panel can open it in a block explorer.
+    |
+    | These apply to every wallet in the list below.
+    |
+    */
+
+    'requires_receipt' => true,
+
+    'requires_tx_hash' => false,
 
     'wallets' => [
 
@@ -39,11 +55,10 @@ return [
             'address' => env('DEPOSIT_BTC_ADDRESS', 'bc1qxmg68chxgnd6zuzp0hzu6zll37p6jmmu84x7m8'),
             'qr_url' => 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&data=',
             'confirmations_required' => (int) env('DEPOSIT_BTC_CONFIRMATIONS', 1),
+            // Base URL the admin panel opens the submitted hash in; the hash is
+            // appended to it. Leave empty to show the raw hash as plain text.
             'explorer_tx_url' => env('DEPOSIT_BTC_EXPLORER_TX_URL', 'https://blockchair.com/bitcoin/transaction/'),
-            // A BTC deposit is proven on-chain, so the hash is the proof.
-            'requires_tx_hash' => true,
-            'requires_receipt' => false,
-            'instructions' => 'Send only BTC (Bitcoin mainnet) to this address. After the transfer is confirmed on-chain, submit your transaction hash below. Funds are credited after an administrator verifies the deposit.',
+            'instructions' => 'Send only BTC (Bitcoin mainnet) to this address from your own wallet or exchange. When the payment is sent, come back here and upload a screenshot of the completed payment. Funds are credited after an administrator verifies it.',
         ],
 
         'ETH' => [
@@ -55,13 +70,7 @@ return [
             'qr_url' => 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&data=',
             'confirmations_required' => (int) env('DEPOSIT_ETH_CONFIRMATIONS', 12),
             'explorer_tx_url' => env('DEPOSIT_ETH_EXPLORER_TX_URL', 'https://etherscan.io/tx/'),
-            // ETH deposits are verified from the uploaded payment receipt, so the
-            // transaction hash is optional and the screenshot is mandatory.
-            // NOTE: env() returns strings, and (bool) 'false' === true in PHP, so
-            // these go through filter_var instead of a plain cast.
-            'requires_tx_hash' => (bool) filter_var(env('DEPOSIT_ETH_REQUIRES_TX_HASH', false), FILTER_VALIDATE_BOOLEAN),
-            'requires_receipt' => (bool) filter_var(env('DEPOSIT_ETH_REQUIRES_RECEIPT', true), FILTER_VALIDATE_BOOLEAN),
-            'instructions' => 'Send only ETH (Ethereum mainnet, ERC-20) to this address. Upload a screenshot of the completed payment below so our finance team can verify it. Funds are credited after an administrator approves the deposit.',
+            'instructions' => 'Send only ETH (Ethereum mainnet, ERC-20) to this address from your own wallet or exchange. When the payment is sent, come back here and upload a screenshot of the completed payment. Funds are credited after an administrator verifies it.',
         ],
 
     ],
