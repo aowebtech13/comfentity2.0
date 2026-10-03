@@ -1,4 +1,4 @@
-export const menuItems = [
+texport const menuItems = [
   {
     isHeadr: true,
     title: "menu",

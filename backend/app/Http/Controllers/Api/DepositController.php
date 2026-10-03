@@ -46,6 +46,12 @@ class DepositController extends Controller
                     'address' => $wallet['address'],
                     'qr_url' => ($wallet['qr_url'] ?? '') . rawurlencode($wallet['address']),
                     'confirmations_required' => $wallet['confirmations_required'] ?? 1,
+                    // The frontend uses these to show/hide and label the proof
+                    // fields, so the page never asks for proof the wallet does
+                    // not actually need.
+                    'requires_tx_hash' => (bool) ($wallet['requires_tx_hash'] ?? true),
+                    'requires_receipt' => (bool) ($wallet['requires_receipt'] ?? false),
+                    'explorer_tx_url' => $wallet['explorer_tx_url'] ?? null,
                     'instructions' => $wallet['instructions'] ?? '',
                 ];
             })
@@ -152,9 +158,13 @@ class DepositController extends Controller
     /**
      * Store a manually-submitted crypto deposit proof.
      *
-     * The balance is NOT credited here: an administrator verifies the on-chain
-     * transaction and approves the deposit from the admin panel, which is when
-     * the balance is credited. See AdminController::updateDepositStatus().
+     * The balance is NOT credited here: an administrator verifies the payment
+     * and approves the deposit from the admin panel, which is when the balance
+     * is credited. See AdminController::updateDepositStatus().
+     *
+     * What counts as proof differs per network, and config/deposit.php decides
+     * it: BTC is proven by the on-chain transaction hash, while ETH is proven
+     * by the uploaded payment receipt, so the hash is optional there.
      */
     public function store(Request $request)
     {
@@ -162,22 +172,36 @@ class DepositController extends Controller
         $min = (float) config('deposit.min_amount', 0);
         $max = (float) config('deposit.max_amount', 0);
 
+        // Resolve the network up front so the validation rules below can be
+        // built from that wallet's proof requirements.
+        $network = (string) $request->input('crypto_network', '');
+        $wallet = $wallets[$network] ?? null;
+
+        if (!$wallet) {
+            return response()->json([
+                'message' => 'Unsupported deposit network.',
+                'errors' => ['crypto_network' => ['Unsupported deposit network.']],
+            ], 422);
+        }
+
+        $requiresTxHash = (bool) ($wallet['requires_tx_hash'] ?? true);
+        $requiresReceipt = (bool) ($wallet['requires_receipt'] ?? false);
+
         $validated = $request->validate([
             'amount' => ['required', 'numeric', 'min:' . $min, $max > 0 ? 'max:' . $max : 'nullable'],
             'crypto_network' => ['required', 'string', 'in:' . implode(',', array_keys($wallets))],
             'crypto_address' => ['required', 'string', 'max:191'],
-            'crypto_tx_hash' => ['required', 'string', 'max:191'],
-            'receipt' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // 2MB max
+            'crypto_tx_hash' => [$requiresTxHash ? 'required' : 'nullable', 'string', 'max:191'],
+            'receipt' => [$requiresReceipt ? 'required' : 'nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // 2MB max
             'description' => ['nullable', 'string', 'max:1000'],
         ], [
             'amount.min' => 'The minimum deposit amount is $' . $min . '.',
             'crypto_network.in' => 'Unsupported deposit network.',
             'crypto_tx_hash.required' => 'Please provide the transaction hash of your payment.',
+            'receipt.required' => 'Please upload a screenshot of your completed payment so we can verify it.',
+            'receipt.image' => 'The payment receipt must be an image (JPEG, PNG or GIF).',
             'receipt.max' => 'The payment screenshot may not be larger than 2MB.',
         ]);
-
-        $network = $validated['crypto_network'];
-        $wallet = $wallets[$network] ?? null;
 
         // The user must have paid to the wallet we published, otherwise there
         // is nothing for an administrator to verify.
@@ -193,10 +217,16 @@ class DepositController extends Controller
             ], 422);
         }
 
+        // Normalised once: the hash is optional for receipt-only networks, and
+        // "" must not be stored (it would defeat the unique index below).
+        $txHash = trim((string) ($validated['crypto_tx_hash'] ?? ''));
+
         // A transaction hash can only ever be credited once. This is enforced
         // by a unique index too — the check exists purely to return a friendly
-        // error instead of a 500 from the database.
-        if (Transaction::where('crypto_tx_hash', $validated['crypto_tx_hash'])->exists()) {
+        // error instead of a 500 from the database. Only runs when a hash was
+        // actually given: where('col', null) compiles to "IS NULL" and would
+        // then match every receipt-only deposit.
+        if ($txHash !== '' && Transaction::where('crypto_tx_hash', $txHash)->exists()) {
             return response()->json([
                 'message' => 'This transaction has already been submitted.',
                 'errors' => ['crypto_tx_hash' => ['This transaction hash has already been submitted.']],
@@ -216,7 +246,7 @@ class DepositController extends Controller
             'method' => $network,
             'crypto_network' => $network,
             'crypto_address' => $validated['crypto_address'],
-            'crypto_tx_hash' => $validated['crypto_tx_hash'],
+            'crypto_tx_hash' => $txHash !== '' ? $txHash : null,
             'reference' => 'DEP-' . strtoupper(Str::random(10)),
             'description' => $validated['description'] ?? null,
             'receipt_path' => $receiptPath,
@@ -226,7 +256,8 @@ class DepositController extends Controller
             'user_id' => $request->user()->id,
             'transaction_id' => $transaction->id,
             'network' => $network,
-            'tx_hash' => $validated['crypto_tx_hash'],
+            'tx_hash' => $txHash !== '' ? $txHash : null,
+            'receipt_path' => $receiptPath,
             'amount' => $validated['amount'],
         ]);
 

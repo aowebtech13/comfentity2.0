@@ -57,8 +57,10 @@ return [
             'explorer_tx_url' => env('DEPOSIT_ETH_EXPLORER_TX_URL', 'https://etherscan.io/tx/'),
             // ETH deposits are verified from the uploaded payment receipt, so the
             // transaction hash is optional and the screenshot is mandatory.
-            'requires_tx_hash' => (bool) env('DEPOSIT_ETH_REQUIRES_TX_HASH', false),
-            'requires_receipt' => (bool) env('DEPOSIT_ETH_REQUIRES_RECEIPT', true),
+            // NOTE: env() returns strings, and (bool) 'false' === true in PHP, so
+            // these go through filter_var instead of a plain cast.
+            'requires_tx_hash' => (bool) filter_var(env('DEPOSIT_ETH_REQUIRES_TX_HASH', false), FILTER_VALIDATE_BOOLEAN),
+            'requires_receipt' => (bool) filter_var(env('DEPOSIT_ETH_REQUIRES_RECEIPT', true), FILTER_VALIDATE_BOOLEAN),
             'instructions' => 'Send only ETH (Ethereum mainnet, ERC-20) to this address. Upload a screenshot of the completed payment below so our finance team can verify it. Funds are credited after an administrator approves the deposit.',
         ],
 
