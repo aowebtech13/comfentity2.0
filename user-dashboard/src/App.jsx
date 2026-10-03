@@ -230,8 +230,7 @@ function App() {
         <Route path="/*" element={<Layout />}>
           <Route path="logout" element={<Logout />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="crm" element={<CrmPage />} />
-<Route path="banking" element={<BankingPage />} />
+          <Route path="banking" element={<BankingPage />} />
           <Route path="deposit" element={<DepositPage />} />
           <Route path="withdraw" element={<WithdrawPage />} />
           {/* App pages */}
