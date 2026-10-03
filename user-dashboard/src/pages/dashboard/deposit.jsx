@@ -13,12 +13,17 @@ import depositService from "@/services/depositService";
  *
  * Flow:
  *   1. Load the published wallet(s) + limits from GET /deposit-info.
- *   2. The user copies the BTC address and sends funds on-chain.
- *   3. They submit the amount, transaction hash and an optional screenshot.
+ *   2. The user picks a network, copies its address and sends funds on-chain.
+ *   3. They submit the proof that network requires: BTC is proven by the
+ *      transaction hash, ETH by a screenshot of the payment.
  *   4. An administrator verifies it and approves, which credits the balance.
  *
  * Nothing is auto-verified: the deposit stays "pending" until a human checks
  * the on-chain transaction, so the copy makes that expectation explicit.
+ *
+ * Which proof a network needs is never hardcoded here — it follows the
+ * requires_tx_hash / requires_receipt flags the backend publishes per wallet,
+ * so adding a network is a config change only.
  */
 const DepositPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -46,6 +51,11 @@ const DepositPage = () => {
   const wallets = info?.wallets ?? [];
   const activeWallet =
     wallets.find((w) => w.id === selectedNetwork) ?? wallets[0] ?? null;
+
+  // What proof the selected network needs. Defaults mirror the backend so the
+  // form stays safe if an older payload ever arrives without these flags.
+  const requiresTxHash = activeWallet?.requires_tx_hash ?? true;
+  const requiresReceipt = activeWallet?.requires_receipt ?? false;
 
   const loadDepositInfo = useCallback(async () => {
     try {
@@ -130,8 +140,14 @@ const DepositPage = () => {
       toast.error(`Maximum deposit is $${info.max_amount}.`);
       return;
     }
-    if (!txHash.trim()) {
+    if (requiresTxHash && !txHash.trim()) {
       toast.error("Please paste the transaction hash of your payment.");
+      return;
+    }
+    if (requiresReceipt && !receipt) {
+      toast.error(
+        "Please upload a screenshot of your completed payment so we can verify it."
+      );
       return;
     }
 
@@ -143,7 +159,8 @@ const DepositPage = () => {
       payload.append("amount", String(amountNum));
       payload.append("crypto_network", activeWallet.id);
       payload.append("crypto_address", activeWallet.address);
-      payload.append("crypto_tx_hash", txHash.trim());
+      // Optional on receipt-only networks, so it is only sent when present.
+      if (txHash.trim()) payload.append("crypto_tx_hash", txHash.trim());
       if (note.trim()) payload.append("description", note.trim());
       if (receipt) payload.append("receipt", receipt);
 

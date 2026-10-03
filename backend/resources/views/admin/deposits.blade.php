@@ -68,12 +68,17 @@
                             @if($deposit->crypto_tx_hash)
                                 <div>
                                     <div class="text-[11px] uppercase tracking-widest text-slate-400 font-bold">Tx hash</div>
-                                    <a href="https://blockchair.com/bitcoin/transaction/{{ urlencode($deposit->crypto_tx_hash) }}"
-                                       target="_blank"
-                                       rel="noopener"
-                                       class="text-xs text-primary font-bold break-all hover:underline">
-                                        {{ $deposit->crypto_tx_hash }}
-                                    </a>
+                                    {{-- Explorer base URL is per-network, configured in config/deposit.php --}}
+                                    @if($deposit->crypto_explorer_tx_url)
+                                        <a href="{{ $deposit->crypto_explorer_tx_url }}"
+                                           target="_blank"
+                                           rel="noopener"
+                                           class="text-xs text-primary font-bold break-all hover:underline">
+                                            {{ $deposit->crypto_tx_hash }}
+                                        </a>
+                                    @else
+                                        <code class="text-xs text-slate-600 break-all">{{ $deposit->crypto_tx_hash }}</code>
+                                    @endif
                                 </div>
                             @endif
 
@@ -82,13 +87,23 @@
                             @endif
 
                             @if($deposit->receipt_url)
-                                <a href="{{ $deposit->receipt_url }}" target="_blank" class="text-xs text-primary font-bold uppercase tracking-widest hover:underline flex items-center gap-1 w-fit">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                    View Screenshot
-                                </a>
+                                <div>
+                                    <div class="text-[11px] uppercase tracking-widest text-slate-400 font-bold">Payment receipt</div>
+                                    {{-- The receipt is the whole proof for receipt-only networks (ETH),
+                                         so it is shown as a thumbnail the reviewer can open directly. --}}
+                                    <a href="{{ $deposit->receipt_url }}" target="_blank" rel="noopener" class="block w-fit">
+                                        <img src="{{ $deposit->receipt_url }}"
+                                             alt="Payment receipt submitted by {{ $deposit->user->name ?? 'user' }}"
+                                             class="h-20 w-20 object-cover rounded-lg border border-slate-200 hover:opacity-80 transition-opacity">
+                                    </a>
+                                    <a href="{{ $deposit->receipt_url }}" target="_blank" rel="noopener" class="text-xs text-primary font-bold uppercase tracking-widest hover:underline flex items-center gap-1 w-fit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                        View Screenshot
+                                    </a>
+                                </div>
                             @endif
 
                             @if($deposit->review_note)
