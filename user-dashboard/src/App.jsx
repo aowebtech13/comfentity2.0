@@ -28,6 +28,7 @@ const lazy = (loader) => withErrorBoundary(reactLazy(loader));
 const Dashboard = lazy(() => import("./pages/dashboard"));
 
 const BankingPage = lazy(() => import("./pages/dashboard/banking"));
+const DepositPage = lazy(() => import("./pages/dashboard/deposit"));
 const WithdrawPage = lazy(() => import("./pages/dashboard/withdraw"));
 
 const Login = lazy(() => import("./pages/auth/login"));
@@ -231,6 +232,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="crm" element={<CrmPage />} />
 <Route path="banking" element={<BankingPage />} />
+          <Route path="deposit" element={<DepositPage />} />
           <Route path="withdraw" element={<WithdrawPage />} />
           {/* App pages */}
           <Route path="chat" element={<ChatComingSoon />} />

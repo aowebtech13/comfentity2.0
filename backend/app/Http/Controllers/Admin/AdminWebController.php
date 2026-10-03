@@ -350,6 +350,7 @@ public function showUser($id)
     {
         $request->validate([
             'status' => 'required|in:completed,cancelled',
+            'review_note' => 'nullable|string|max:1000',
         ]);
 
         $transaction = Transaction::findOrFail($id);
@@ -359,9 +360,18 @@ public function showUser($id)
 
         DB::transaction(function () use ($transaction, $request) {
             $transaction->status = $request->status;
+
+            // Reviewer note (e.g. "tx hash not found on-chain", "wrong network").
+            if (filled($request->review_note)) {
+                $transaction->review_note = $request->review_note;
+            }
+
+            // The balance is only credited once the on-chain transfer has been
+            // verified by an administrator.
             if ($request->status === 'completed') {
                 $transaction->user->increment('balance', $transaction->amount);
             }
+
             $transaction->save();
         });
 

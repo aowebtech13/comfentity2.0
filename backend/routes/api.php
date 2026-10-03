@@ -50,6 +50,7 @@ Route::middleware(['throttle:api'])->group(function () {
         Route::post('/withdraw', [WithdrawalController::class, 'store'])->middleware('throttle:transactions');
 
         Route::get('/deposits', [\App\Http\Controllers\Api\DepositController::class, 'index']);
+        Route::get('/deposit-info', [\App\Http\Controllers\Api\DepositController::class, 'info']);
         Route::post('/deposit', [\App\Http\Controllers\Api\DepositController::class, 'store'])->middleware('throttle:transactions');
         Route::post('/deposit/paystack/verify', [\App\Http\Controllers\Api\DepositController::class, 'verifyPaystack'])->middleware('throttle:transactions');
 

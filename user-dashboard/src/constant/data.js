@@ -53,6 +53,11 @@ export const menuItems = [
    
   },
   {
+    title: "Deposit",
+    icon: "heroicons-outline:arrow-down-tray",
+    link: "deposit",
+  },
+  {
     title: "Withdraw",
     icon: "heroicons-outline:cash",
     link: "withdraw",

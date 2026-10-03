@@ -23,7 +23,7 @@
                 <tr class="bg-slate-50/50 border-b border-slate-100">
                     <th class="font-bold text-[14px] uppercase tracking-[0.15em] text-slate-400 py-5 px-8">User</th>
                     <th class="font-bold text-[14px] uppercase tracking-[0.15em] text-slate-400">Amount</th>
-                    <th class="font-bold text-[14px] uppercase tracking-[0.15em] text-slate-400">Method</th>
+                    <th class="font-bold text-[14px] uppercase tracking-[0.15em] text-slate-400">Payment Proof</th>
                     <th class="font-bold text-[14px] uppercase tracking-[0.15em] text-slate-400">Status</th>
                     <th class="font-bold text-[14px] uppercase tracking-[0.15em] text-slate-400">Date</th>
                     <th class="font-bold text-[14px] uppercase tracking-[0.15em] text-slate-400 text-right px-8">Actions</th>
@@ -53,16 +53,48 @@
                         <div class="font-black text-emerald-600 text-base">+${{ number_format($deposit->amount, 2) }}</div>
                     </td>
                     <td>
-                        <div class="flex flex-col gap-1">
-                            <span class="badge bg-slate-100 text-slate-600 border-none font-black text-[13px] uppercase tracking-widest px-2 py-1 h-auto rounded-md">{{ $deposit->method ?? 'N/A' }}</span>
+                        <div class="flex flex-col gap-2 min-w-[240px]">
+                            <span class="badge bg-slate-100 text-slate-600 border-none font-black text-[13px] uppercase tracking-widest px-2 py-1 h-auto rounded-md w-fit">
+                                {{ $deposit->crypto_network ?? $deposit->method ?? 'N/A' }}
+                            </span>
+
+                            @if($deposit->crypto_address)
+                                <div>
+                                    <div class="text-[11px] uppercase tracking-widest text-slate-400 font-bold">To address</div>
+                                    <code class="text-xs text-slate-600 break-all">{{ $deposit->crypto_address }}</code>
+                                </div>
+                            @endif
+
+                            @if($deposit->crypto_tx_hash)
+                                <div>
+                                    <div class="text-[11px] uppercase tracking-widest text-slate-400 font-bold">Tx hash</div>
+                                    <a href="https://blockchair.com/bitcoin/transaction/{{ urlencode($deposit->crypto_tx_hash) }}"
+                                       target="_blank"
+                                       rel="noopener"
+                                       class="text-xs text-primary font-bold break-all hover:underline">
+                                        {{ $deposit->crypto_tx_hash }}
+                                    </a>
+                                </div>
+                            @endif
+
+                            @if($deposit->description)
+                                <div class="text-[13px] text-slate-500 font-medium">{{ $deposit->description }}</div>
+                            @endif
+
                             @if($deposit->receipt_url)
-                                <a href="{{ $deposit->receipt_url }}" target="_blank" class="text-xs text-primary font-bold uppercase tracking-widest hover:underline flex items-center gap-1">
+                                <a href="{{ $deposit->receipt_url }}" target="_blank" class="text-xs text-primary font-bold uppercase tracking-widest hover:underline flex items-center gap-1 w-fit">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
-                                    View Receipt
+                                    View Screenshot
                                 </a>
+                            @endif
+
+                            @if($deposit->review_note)
+                                <div class="text-[13px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2 py-1">
+                                    <span class="font-bold">Review note:</span> {{ $deposit->review_note }}
+                                </div>
                             @endif
                         </div>
                     </td>
@@ -81,16 +113,20 @@
                     </td>
                     <td class="text-right px-8">
                         @if($deposit->status === 'pending')
-                        <div class="flex justify-end gap-2">
-                            <form action="{{ route('admin.deposits.update', $deposit->id) }}" method="POST">
+                        <div class="flex flex-col gap-2 items-end">
+                            <form action="{{ route('admin.deposits.update', $deposit->id) }}" method="POST" class="flex gap-2">
                                 @csrf
                                 <input type="hidden" name="status" value="completed">
                                 <button class="btn bg-emerald-500 hover:bg-emerald-600 text-white border-none btn-sm rounded-lg px-4 font-black text-[14px] uppercase tracking-widest">Approve</button>
                             </form>
-                            <form action="{{ route('admin.deposits.update', $deposit->id) }}" method="POST">
+                            <form action="{{ route('admin.deposits.update', $deposit->id) }}" method="POST" class="flex gap-2 items-center">
                                 @csrf
                                 <input type="hidden" name="status" value="cancelled">
-                                <button class="btn bg-white border-slate-200 hover:bg-slate-50 text-slate-600 btn-sm rounded-lg px-4 font-black text-[14px] uppercase tracking-widest shadow-sm">Cancel</button>
+                                <input type="text"
+                                       name="review_note"
+                                       placeholder="Rejection reason (optional)"
+                                       class="form-input form-input-sm text-xs rounded-lg border-slate-200 w-[220px]">
+                                <button class="btn bg-white border-slate-200 hover:bg-slate-50 text-slate-600 btn-sm rounded-lg px-4 font-black text-[14px] uppercase tracking-widest shadow-sm">Reject</button>
                             </form>
                         </div>
                         @endif

@@ -25,6 +25,41 @@ class DepositController extends Controller
         return response()->json($deposits);
     }
 
+    /**
+     * Deposit instructions shown on the dashboard.
+     *
+     * Deposits are crypto-only: the user copies the wallet address, sends
+     * funds on-chain, then submits the transaction hash manually. Everything
+     * the deposit page needs to render comes from config/deposit.php so the
+     * wallet can be rotated from .env without a code change.
+     */
+    public function info()
+    {
+        $wallets = collect(config('deposit.wallets', []))
+            ->filter(fn ($wallet) => !empty($wallet['address']))
+            ->map(function ($wallet, $key) {
+                return [
+                    'id' => $key,
+                    'label' => $wallet['label'] ?? $key,
+                    'symbol' => $wallet['symbol'] ?? $key,
+                    'network' => $wallet['network'] ?? $key,
+                    'address' => $wallet['address'],
+                    'qr_url' => ($wallet['qr_url'] ?? '') . rawurlencode($wallet['address']),
+                    'confirmations_required' => $wallet['confirmations_required'] ?? 1,
+                    'instructions' => $wallet['instructions'] ?? '',
+                ];
+            })
+            ->values()
+            ->all();
+
+        return response()->json([
+            'wallets' => $wallets,
+            'min_amount' => (float) config('deposit.min_amount', 0),
+            'max_amount' => (float) config('deposit.max_amount', 0),
+            'currency' => 'USD',
+        ]);
+    }
+
     public function verifyPaystack(Request $request)
     {
         $request->validate([
@@ -114,14 +149,59 @@ class DepositController extends Controller
         }
     }
 
+    /**
+     * Store a manually-submitted crypto deposit proof.
+     *
+     * The balance is NOT credited here: an administrator verifies the on-chain
+     * transaction and approves the deposit from the admin panel, which is when
+     * the balance is credited. See AdminController::updateDepositStatus().
+     */
     public function store(Request $request)
     {
-        $request->validate([
-            'amount' => 'required|numeric|min:5000',
-            'method' => 'required|string',
-            'receipt' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
-            'description' => 'nullable|string'
+        $wallets = config('deposit.wallets', []);
+        $min = (float) config('deposit.min_amount', 0);
+        $max = (float) config('deposit.max_amount', 0);
+
+        $validated = $request->validate([
+            'amount' => ['required', 'numeric', 'min:' . $min, $max > 0 ? 'max:' . $max : 'nullable'],
+            'crypto_network' => ['required', 'string', 'in:' . implode(',', array_keys($wallets))],
+            'crypto_address' => ['required', 'string', 'max:191'],
+            'crypto_tx_hash' => ['required', 'string', 'max:191'],
+            'receipt' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // 2MB max
+            'description' => ['nullable', 'string', 'max:1000'],
+        ], [
+            'amount.min' => 'The minimum deposit amount is $' . $min . '.',
+            'crypto_network.in' => 'Unsupported deposit network.',
+            'crypto_tx_hash.required' => 'Please provide the transaction hash of your payment.',
+            'receipt.max' => 'The payment screenshot may not be larger than 2MB.',
         ]);
+
+        $network = $validated['crypto_network'];
+        $wallet = $wallets[$network] ?? null;
+
+        // The user must have paid to the wallet we published, otherwise there
+        // is nothing for an administrator to verify.
+        if (($wallet['address'] ?? null) !== $validated['crypto_address']) {
+            Log::warning("Deposit submitted to an unpublished address", [
+                'user_id' => $request->user()->id,
+                'submitted_address' => $validated['crypto_address'],
+            ]);
+
+            return response()->json([
+                'message' => 'The deposit address does not match our published ' . $network . ' wallet. Please use the address shown on the deposit page.',
+                'errors' => ['crypto_address' => ['The deposit address does not match the published wallet address.']],
+            ], 422);
+        }
+
+        // A transaction hash can only ever be credited once. This is enforced
+        // by a unique index too — the check exists purely to return a friendly
+        // error instead of a 500 from the database.
+        if (Transaction::where('crypto_tx_hash', $validated['crypto_tx_hash'])->exists()) {
+            return response()->json([
+                'message' => 'This transaction has already been submitted.',
+                'errors' => ['crypto_tx_hash' => ['This transaction hash has already been submitted.']],
+            ], 422);
+        }
 
         $receiptPath = null;
         if ($request->hasFile('receipt')) {
@@ -131,18 +211,29 @@ class DepositController extends Controller
         $transaction = Transaction::create([
             'user_id' => $request->user()->id,
             'type' => 'deposit',
-            'amount' => $request->amount,
+            'amount' => $validated['amount'],
             'status' => 'pending',
-            'method' => $request->method,
+            'method' => $network,
+            'crypto_network' => $network,
+            'crypto_address' => $validated['crypto_address'],
+            'crypto_tx_hash' => $validated['crypto_tx_hash'],
             'reference' => 'DEP-' . strtoupper(Str::random(10)),
-            'description' => $request->description,
+            'description' => $validated['description'] ?? null,
             'receipt_path' => $receiptPath,
         ]);
 
-        return response()->json([
-            'message' => 'Deposit request submitted successfully. Waiting for admin approval.',
-            'transaction' => $transaction
+        Log::info("Crypto deposit proof submitted", [
+            'user_id' => $request->user()->id,
+            'transaction_id' => $transaction->id,
+            'network' => $network,
+            'tx_hash' => $validated['crypto_tx_hash'],
+            'amount' => $validated['amount'],
         ]);
+
+        return response()->json([
+            'message' => 'Deposit proof submitted successfully. Your balance will be credited once an administrator verifies the payment.',
+            'transaction' => $transaction,
+        ], 201);
     }
 
     public function handleWebhook(Request $request)
