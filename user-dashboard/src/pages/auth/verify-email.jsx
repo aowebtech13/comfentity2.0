@@ -30,18 +30,6 @@ const VerifyEmail = () => {
     const storeEmail = user?.email;
     const resolvedEmail = navEmail || storeEmail || "";
     if (resolvedEmail) setEmail(resolvedEmail);
-
-    // Auto-resend a fresh verification code once on mount when an email is
-    // known. This is especially important for legacy users who registered
-    // before email verification was added — they never received a code, so
-    // we proactively generate and email one instead of waiting for them to
-    // press "Resend code".
-    if (resolvedEmail) {
-      const timer = setTimeout(() => {
-        handleResend(resolvedEmail);
-      }, 800);
-      return () => clearTimeout(timer);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -74,7 +62,10 @@ const VerifyEmail = () => {
   };
 
   const handleResend = async (overrideEmail) => {
-    const targetEmail = overrideEmail || email;
+    // When called from a button onClick, the first argument is a DOM event.
+    // Only use it as an email override when it's actually a string.
+    const targetEmail =
+      typeof overrideEmail === "string" ? overrideEmail : email;
     if (!targetEmail) {
       toast.error("Email is required to resend the code.");
       return;
