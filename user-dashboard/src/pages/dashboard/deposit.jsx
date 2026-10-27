@@ -389,7 +389,7 @@ const DepositPage = () => {
         <div className="lg:col-span-7 col-span-12">
           <Card
             title="Submit Proof of Payment"
-            subtitle="Required so an administrator can verify your deposit"
+            subtitle="Upload the screenshot of your payment"
             bodyClass="p-6"
           >
             <form onSubmit={handleSubmit} className="space-y-4">
