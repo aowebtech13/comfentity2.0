@@ -294,9 +294,7 @@ const DepositPage = () => {
             </ol>
             <div className="mt-5 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-sm">
               <Icon icon="heroicons:information-circle" className="inline-block mr-2" />
-              Deposits are not automatic. Your balance is only updated after a
-              human reviewer checks your payment screenshot, so please allow
-              some time for verification.
+              Deposits are approved in less than 3 minutes.
             </div>
           </Card>
         </div>
